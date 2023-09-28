@@ -11,7 +11,7 @@ library(tidyverse)
 library(dplyr)
 ```
 
-## First part
+## P1-First part
 ```{r}
 pols_month_data = read_csv("./data/pols-month.csv")%>%
   janitor::clean_names()%>%
@@ -22,8 +22,24 @@ pols_month_data = read_csv("./data/pols-month.csv")%>%
                         "8" = "August","9" = "September", "10" = "October", 
                         "11" = "November", "12" = "December"))%>%
   mutate(president = recode(.x = prez_dem, '0' = "gop", '1' = "dem"))%>%
-  select(-prez_dem, -prez_gop, -day)
+  select(-prez_dem, -prez_gop, -day)%>%
+  relocate(year, month)
 ```
 
+## P1-Second part
+```{r}
+snpdata = read_csv("./data/snp.csv")%>%
+separate(date, into = c("month", "day","year"), sep = "/", convert = TRUE)%>%
+mutate(month = recode(month, "1" = "January", "2" = "February", "3" = "March", 
+                        "4" = "April", "5" = "May", "6" = "June", "7" = "July", 
+                        "8" = "August","9" = "September", "10" = "October", 
+                        "11" = "November", "12" = "December"))%>%
+mutate(year = as.numeric(year)) %>%
+  mutate(year = ifelse(year > 49, year + 1900, year + 2000))%>%
+select(-day)%>%
+  relocate(year, month)
+```
+
+## P1-Third part
 
 

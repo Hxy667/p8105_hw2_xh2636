@@ -372,8 +372,8 @@ display: none;
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(dplyr)</code></pre>
 </div>
-<div id="first-part" class="section level2">
-<h2>First part</h2>
+<div id="p1-first-part" class="section level2">
+<h2>P1-First part</h2>
 <pre class="r"><code>pols_month_data = read_csv(&quot;./data/pols-month.csv&quot;)%&gt;%
   janitor::clean_names()%&gt;%
   separate(mon, into = c(&quot;year&quot;,&quot;month&quot;,&quot;day&quot;),
@@ -383,7 +383,8 @@ display: none;
                         &quot;8&quot; = &quot;August&quot;,&quot;9&quot; = &quot;September&quot;, &quot;10&quot; = &quot;October&quot;, 
                         &quot;11&quot; = &quot;November&quot;, &quot;12&quot; = &quot;December&quot;))%&gt;%
   mutate(president = recode(.x = prez_dem, &#39;0&#39; = &quot;gop&quot;, &#39;1&#39; = &quot;dem&quot;))%&gt;%
-  select(-prez_dem, -prez_gop, -day)</code></pre>
+  select(-prez_dem, -prez_gop, -day)%&gt;%
+  relocate(year, month)</code></pre>
 <pre><code>## Rows: 822 Columns: 9
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -392,6 +393,30 @@ display: none;
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div id="p1-second-part" class="section level2">
+<h2>P1-Second part</h2>
+<pre class="r"><code>snpdata = read_csv(&quot;./data/snp.csv&quot;)%&gt;%
+separate(date, into = c(&quot;month&quot;, &quot;day&quot;,&quot;year&quot;), sep = &quot;/&quot;, convert = TRUE)%&gt;%
+mutate(month = recode(month, &quot;1&quot; = &quot;January&quot;, &quot;2&quot; = &quot;February&quot;, &quot;3&quot; = &quot;March&quot;, 
+                        &quot;4&quot; = &quot;April&quot;, &quot;5&quot; = &quot;May&quot;, &quot;6&quot; = &quot;June&quot;, &quot;7&quot; = &quot;July&quot;, 
+                        &quot;8&quot; = &quot;August&quot;,&quot;9&quot; = &quot;September&quot;, &quot;10&quot; = &quot;October&quot;, 
+                        &quot;11&quot; = &quot;November&quot;, &quot;12&quot; = &quot;December&quot;))%&gt;%
+mutate(year = as.numeric(year)) %&gt;%
+  mutate(year = ifelse(year &gt; 49, year + 1900, year + 2000))%&gt;%
+select(-day)%&gt;%
+  relocate(year, month)</code></pre>
+<pre><code>## Rows: 787 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): date
+## dbl (1): close
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div id="p1-third-part" class="section level2">
+<h2>P1-Third part</h2>
 </div>
 
 
