@@ -1,0 +1,29 @@
+---
+title: "p8105_hw2_xh2636"
+author: "Xiaoyu Huang"
+date: "2023-09-28"
+output: html_document
+---
+
+## Problem 1
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+## First part
+```{r}
+pols_month_data = read_csv("./data/pols-month.csv")%>%
+  janitor::clean_names()%>%
+  separate(mon, into = c("year","month","day"),
+           sep = "-", convert = TRUE) %>% 
+  mutate(month = recode(month, "1" = "January", "2" = "February", "3" = "March", 
+                        "4" = "April", "5" = "May", "6" = "June", "7" = "July", 
+                        "8" = "August","9" = "September", "10" = "October", 
+                        "11" = "November", "12" = "December"))%>%
+  mutate(president = recode(.x = prez_dem, '0' = "gop", '1' = "dem"))%>%
+  select(-prez_dem, -prez_gop, -day)
+```
+
+
+
