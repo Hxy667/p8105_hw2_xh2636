@@ -372,8 +372,8 @@ display: none;
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(dplyr)</code></pre>
 </div>
-<div id="p1-first-part" class="section level2">
-<h2>P1-First part</h2>
+<div id="p1-1st-part" class="section level2">
+<h2>P1-1st part</h2>
 <pre class="r"><code>pols_month_data = read_csv(&quot;./data/pols-month.csv&quot;)%&gt;%
   janitor::clean_names()%&gt;%
   separate(mon, into = c(&quot;year&quot;,&quot;month&quot;,&quot;day&quot;),
@@ -384,7 +384,7 @@ display: none;
                         &quot;11&quot; = &quot;November&quot;, &quot;12&quot; = &quot;December&quot;))%&gt;%
   mutate(president = recode(.x = prez_dem, &#39;0&#39; = &quot;gop&quot;, &#39;1&#39; = &quot;dem&quot;))%&gt;%
   select(-prez_dem, -prez_gop, -day)%&gt;%
-  relocate(year, month)</code></pre>
+  relocate(year, month, president)</code></pre>
 <pre><code>## Rows: 822 Columns: 9
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -394,8 +394,8 @@ display: none;
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div id="p1-second-part" class="section level2">
-<h2>P1-Second part</h2>
+<div id="p1-2nd-part" class="section level2">
+<h2>P1-2nd part</h2>
 <pre class="r"><code>snpdata = read_csv(&quot;./data/snp.csv&quot;)%&gt;%
 separate(date, into = c(&quot;month&quot;, &quot;day&quot;,&quot;year&quot;), sep = &quot;/&quot;, convert = TRUE)%&gt;%
 mutate(month = recode(month, &quot;1&quot; = &quot;January&quot;, &quot;2&quot; = &quot;February&quot;, &quot;3&quot; = &quot;March&quot;, 
@@ -415,8 +415,43 @@ select(-day)%&gt;%
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div id="p1-third-part" class="section level2">
-<h2>P1-Third part</h2>
+<div id="p1-3rd-part" class="section level2">
+<h2>P1-3rd part</h2>
+<pre class="r"><code>unemploydata = read_csv(&quot;./data/unemployment.csv&quot;)%&gt;%
+janitor::clean_names()%&gt;%
+  pivot_longer(cols = jan:dec,
+               names_to = &quot;month&quot;,
+               values_to = &quot;Percentage_of_unemployment&quot;)%&gt;%
+mutate(month = recode(month, &quot;jan&quot; = &quot;January&quot;, &quot;feb&quot; = &quot;February&quot;, 
+                      &quot;mar&quot; = &quot;March&quot;, &quot;apr&quot; = &quot;April&quot;, &quot;may&quot; = &quot;May&quot;, &quot;jun&quot; = &quot;June&quot;, 
+                      &quot;jul&quot; = &quot;July&quot;, &quot;aug&quot; = &quot;August&quot;, &quot;sep&quot; = &quot;September&quot;, 
+                      &quot;oct&quot; = &quot;October&quot;,&quot;nov&quot; = &quot;November&quot;, &quot;dec&quot; = &quot;December&quot;))</code></pre>
+<pre><code>## Rows: 68 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (13): Year, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>merge_data = left_join(pols_month_data, snpdata,
+                       by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
+  left_join(unemploydata, by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
+relocate(year, month, president)</code></pre>
+<p>For the first data set “pols_month_data”, we have 822 rows and 9
+columns. The range for this data set is 1947-2015, which contain
+important information related to the number of national politicians who
+are democratic or republican at any given time. The key variable is
+create a president variable taking values “gop” and “dem”. For the
+second data set “snpdata”, we have 787 rows and 2 columns. The range for
+this data set is 1950-2015, which contain the date of the observation
+and the closing values of the S&amp;P stock index on the associated
+date. For the third data set “unemploydata”, we have 68 rows and 13
+columns. The range for this data set is 1948-2015, which contain the
+year of the measurements and percentage of unemployment in the
+particular month of the associated year. The result is that after
+organizing these data in various ways, such as arranging them by year
+and month, etc., we can integrate three different excel data for easy
+viewing.</p>
 </div>
 
 
