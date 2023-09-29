@@ -56,6 +56,7 @@ mutate(month = recode(month, "jan" = "January", "feb" = "February",
 view(unemploydata)
 ```
 
+## Binding Data
 ```{r}
 merge_data = left_join(pols_month_data, snpdata,
                        by = c("year", "month"))%>%
@@ -98,6 +99,7 @@ Gwyndata = readxl::read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
 view(Gwyndata)
 ```
 
+## Binding data
 ```{r}
 Mr_Trash_Wheel <- MrTrashdata %>%
   mutate(wheel_name = "Mr. Trash Wheel")
@@ -114,3 +116,6 @@ view(combined)
 ```
 
 The Mr.Trash Wheel key variables are different kind of bags, glass bottles, plastic bottles, and sport balls. For the Professor trash wheel, the key variable are also the same as before but no sport balls. For the Gwynna trash wheel, the variable are also same but without sports balls, chip bags, grocery bags, and glass bottle. The dumpster number, trash weight, and home powered are important for all the trash wheels. The total weight of trash collected by Professor Trash Wheel is 190.12 tons, and the total number of cigarette butts collected by Gwynnda in July of 2021 is 16300.
+
+## Probelm 3
+

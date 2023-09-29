@@ -436,6 +436,9 @@ mutate(month = recode(month, &quot;jan&quot; = &quot;January&quot;, &quot;feb&qu
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>view(unemploydata)</code></pre>
+</div>
+<div id="binding-data" class="section level2">
+<h2>Binding Data</h2>
 <pre class="r"><code>merge_data = left_join(pols_month_data, snpdata,
                        by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
   left_join(unemploydata, by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
@@ -481,6 +484,9 @@ view(ProTrashdata)</code></pre>
   drop_na()%&gt;%
   mutate(homes_powered = (weight_tons * 500)/30)
 view(Gwyndata)</code></pre>
+</div>
+<div id="binding-data-1" class="section level2">
+<h2>Binding data</h2>
 <pre class="r"><code>Mr_Trash_Wheel &lt;- MrTrashdata %&gt;%
   mutate(wheel_name = &quot;Mr. Trash Wheel&quot;)
 Professor_Trash_Wheel &lt;- ProTrashdata %&gt;%
@@ -508,6 +514,9 @@ number, trash weight, and home powered are important for all the trash
 wheels. The total weight of trash collected by Professor Trash Wheel is
 190.12 tons, and the total number of cigarette butts collected by
 Gwynnda in July of 2021 is 16300.</p>
+</div>
+<div id="probelm-3" class="section level2">
+<h2>Probelm 3</h2>
 </div>
 
 
