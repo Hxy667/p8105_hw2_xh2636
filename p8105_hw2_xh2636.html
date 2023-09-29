@@ -393,6 +393,7 @@ display: none;
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>view(pols_month_data)</code></pre>
 </div>
 <div id="p1-2nd-part" class="section level2">
 <h2>P1-2nd part</h2>
@@ -414,6 +415,7 @@ select(-day)%&gt;%
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>view(snpdata)</code></pre>
 </div>
 <div id="p1-3rd-part" class="section level2">
 <h2>P1-3rd part</h2>
@@ -433,10 +435,12 @@ mutate(month = recode(month, &quot;jan&quot; = &quot;January&quot;, &quot;feb&qu
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>view(unemploydata)</code></pre>
 <pre class="r"><code>merge_data = left_join(pols_month_data, snpdata,
                        by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
   left_join(unemploydata, by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
-relocate(year, month, president)</code></pre>
+relocate(year, month, president)
+view(merge_data)</code></pre>
 <p>For the first data set “pols_month_data”, we have 822 rows and 9
 columns. The range for this data set is 1947-2015, which contain
 important information related to the number of national politicians who
@@ -452,6 +456,58 @@ particular month of the associated year. The result is that after
 organizing these data in various ways, such as arranging them by year
 and month, etc., we can integrate three different excel data for easy
 viewing.</p>
+</div>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
+<pre class="r"><code>MrTrashdata = readxl::read_excel(&quot;./data/202207 Trash Wheel Collection Data.xlsx&quot;,
+                                 sheet = &quot;Mr. Trash Wheel&quot;,
+                                 range = &quot;A2:N549&quot;)%&gt;%
+  janitor::clean_names()%&gt;%
+filter(homes_powered!=0.000)%&gt;%
+  drop_na()%&gt;%
+  mutate(homes_powered = (weight_tons * 500)/30)
+view(MrTrashdata)</code></pre>
+<pre class="r"><code>ProTrashdata = readxl::read_excel(&quot;./data/202207 Trash Wheel Collection Data.xlsx&quot;,
+                                 sheet = &quot;Professor Trash Wheel&quot;,
+                                 range = &quot;A2:M96&quot;)%&gt;%
+  janitor::clean_names()%&gt;%
+  drop_na()%&gt;%
+  mutate(homes_powered = (weight_tons * 500)/30)
+view(ProTrashdata)</code></pre>
+<pre class="r"><code>Gwyndata = readxl::read_excel(&quot;./data/202207 Trash Wheel Collection Data.xlsx&quot;,
+                                 sheet = &quot;Gwynnda Trash Wheel&quot;,
+                                 range = &quot;A2:K108&quot;)%&gt;%
+  janitor::clean_names()%&gt;%
+  drop_na()%&gt;%
+  mutate(homes_powered = (weight_tons * 500)/30)
+view(Gwyndata)</code></pre>
+<pre class="r"><code>Mr_Trash_Wheel &lt;- MrTrashdata %&gt;%
+  mutate(wheel_name = &quot;Mr. Trash Wheel&quot;)
+Professor_Trash_Wheel &lt;- ProTrashdata %&gt;%
+  mutate(wheel_name = &quot;Professor Trash Wheel&quot;)
+Gwynna_Trash_Wheel &lt;- Gwyndata %&gt;%
+  mutate(wheel_name = &quot;Gwynna Trash Wheel&quot;)
+Mr_Trash_Wheel$year &lt;- as.numeric(Mr_Trash_Wheel$year)
+Professor_Trash_Wheel$year &lt;- as.numeric(Professor_Trash_Wheel$year)
+Gwynna_Trash_Wheel$year &lt;- as.numeric(Gwynna_Trash_Wheel$year)
+combined &lt;- bind_rows(Mr_Trash_Wheel, Professor_Trash_Wheel, Gwynna_Trash_Wheel)
+drop_na(combined)</code></pre>
+<pre><code>## # A tibble: 0 × 16
+## # ℹ 16 variables: dumpster &lt;dbl&gt;, month &lt;chr&gt;, year &lt;dbl&gt;, date &lt;dttm&gt;,
+## #   weight_tons &lt;dbl&gt;, volume_cubic_yards &lt;dbl&gt;, plastic_bottles &lt;dbl&gt;,
+## #   polystyrene &lt;dbl&gt;, cigarette_butts &lt;dbl&gt;, glass_bottles &lt;dbl&gt;,
+## #   grocery_bags &lt;dbl&gt;, chip_bags &lt;dbl&gt;, sports_balls &lt;dbl&gt;,
+## #   homes_powered &lt;dbl&gt;, wheel_name &lt;chr&gt;, plastic_bags &lt;dbl&gt;</code></pre>
+<pre class="r"><code>view(combined)</code></pre>
+<p>The Mr.Trash Wheel key variables are different kind of bags, glass
+bottles, plastic bottles, and sport balls. For the Professor trash
+wheel, the key variable are also the same as before but no sport balls.
+For the Gwynna trash wheel, the variable are also same but without
+sports balls, chip bags, grocery bags, and glass bottle. The dumpster
+number, trash weight, and home powered are important for all the trash
+wheels. The total weight of trash collected by Professor Trash Wheel is
+190.12 tons, and the total number of cigarette butts collected by
+Gwynnda in July of 2021 is 16300.</p>
 </div>
 
 
