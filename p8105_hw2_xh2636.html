@@ -583,6 +583,7 @@ Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_2), ]
 Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_4), ]
 Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_6), ]
 Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_8), ]
+colnames(Amyloid)[which(colnames(Amyloid) == &quot;study_id&quot;)] &lt;- &quot;id&quot;
 view(Amyloid)</code></pre>
 <p>Same as the previous data, I chose the path to read the document, and
 used Janitor to modify the name of the document, and I used “skip=1” to
@@ -597,6 +598,38 @@ years) from study baseline to the visit where the biomarker amyloid
 </div>
 <div id="p3-3rd-part" class="section level2">
 <h2>P3-3rd part</h2>
+</div>
+<div id="merge-data" class="section level2">
+<h2>Merge data</h2>
+<pre class="r"><code>combined_df &lt;- inner_join(MCI, Amyloid, by = &quot;id&quot;)
+view(combined_df)</code></pre>
+<pre class="r"><code>y &lt;- mean(combined_df$current_age)
+z &lt;- mean(combined_df$education)
+print(y)</code></pre>
+<pre><code>## [1] 65.83182</code></pre>
+<pre class="r"><code>print(z)</code></pre>
+<pre><code>## [1] 16.48485</code></pre>
+<pre class="r"><code>count_female = combined_df %&gt;% group_by(sex) %&gt;% filter(sex==&quot;Female&quot;) %&gt;% summarize(n=n())
+count_female</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   sex        n
+##   &lt;chr&gt;  &lt;int&gt;
+## 1 Female    33</code></pre>
+<pre class="r"><code>count_man = combined_df %&gt;% group_by(sex) %&gt;% filter(sex==&quot;Male&quot;) %&gt;% summarize(n=n())
+count_man</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   sex       n
+##   &lt;chr&gt; &lt;int&gt;
+## 1 Male     33</code></pre>
+<p>The combine_df included all the participants appear in both the
+baseline or Amyloid datasets, and rest of the “id”, which is not
+included are participate whether in baseline and Amyloid. The combine_df
+age mean is 65.83, and the education mean is 16.48. Also, the man and
+female in this data are both 33.</p>
+<pre class="r"><code>file_path &lt;- &quot;./data/combined_data.csv&quot;
+write.csv(combined_df, file = file_path, row.names = FALSE)
+cat(&quot;Combined data has been exported to&quot;, file_path, &quot;\n&quot;)</code></pre>
+<pre><code>## Combined data has been exported to ./data/combined_data.csv</code></pre>
 </div>
 
 
