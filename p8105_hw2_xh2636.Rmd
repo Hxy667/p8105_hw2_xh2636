@@ -118,4 +118,52 @@ view(combined)
 The Mr.Trash Wheel key variables are different kind of bags, glass bottles, plastic bottles, and sport balls. For the Professor trash wheel, the key variable are also the same as before but no sport balls. For the Gwynna trash wheel, the variable are also same but without sports balls, chip bags, grocery bags, and glass bottle. The dumpster number, trash weight, and home powered are important for all the trash wheels. The total weight of trash collected by Professor Trash Wheel is 190.12 tons, and the total number of cigarette butts collected by Gwynnda in July of 2021 is 16300.
 
 ## Probelm 3
+## P3-1st part
+```{r}
+MCI = read_csv("./data/MCI_baseline.csv", skip = 1)%>%
+janitor::clean_names()
+MCI$sex <- ifelse(MCI$sex == 1, "Male", "Female")
+MCI$apoe4 <- ifelse(MCI$apoe4 == 1, "Apoe4 carrier", "Non-Apeo4 carrier")
+MCI <- MCI[MCI$age_at_onset %in% as.numeric(MCI$age_at_onset), ]
+view(MCI)
+```
+
+First I chose the path to read the document, and used Janitor to modify the name of the document, and I used “skip=1” to skip reading the name of the first line, because that is not what we want. The second line is the title. After this I used “ifelse” to classify files of type 0 and 1 and give the corresponding numbers different names. Then I used “%in%” to filter out rows that were not data in the age on set. And this data includes age, gender, education and whether you are a carrier of apoe4. They are 483 participants were recruited and 97 developed MCI. 
+
+```{r}
+x <- mean(MCI$current_age)
+print(x)
+```
+The average age for this MCI is 65.611.
+
+```{r}
+count_female = MCI %>% group_by(sex) %>% filter(sex=="Female") %>% summarize(n=n())
+count_female
+```
+
+The number of MCI female is 46.
+
+```{r}
+count_apoe4 = MCI %>% group_by(apoe4) %>% filter(apoe4=="Apoe4 carrier") %>% summarize(n=n())
+count_apoe4
+```
+
+The number of total apoe4 carrier is 61. So the proportion of women in the study are APOE4 carriers is 46/61 = 0.7541.
+
+## P3-2nd part
+```{r}
+Amyloid = read_csv("./data/mci_amyloid.csv", skip = 1)%>%
+  janitor::clean_names()%>%
+  drop_na()
+Amyloid <- Amyloid[!grepl("Na", Amyloid$baseline), ]
+Amyloid <- Amyloid[!grepl("Na", Amyloid$time_2), ]
+Amyloid <- Amyloid[!grepl("Na", Amyloid$time_4), ]
+Amyloid <- Amyloid[!grepl("Na", Amyloid$time_6), ]
+Amyloid <- Amyloid[!grepl("Na", Amyloid$time_8), ]
+view(Amyloid)
+```
+
+Same as the previous data, I chose the path to read the document, and used Janitor to modify the name of the document, and I used “skip=1” to skip reading the name of the first line, because that is not what we want. The second line is the title. Then I used drop na to delete the rows with NA, and Na occurred in this data, so I had to eliminate by using !grepl(pattern, x), which is used to filter out elements in the character vector x that do not match the specified pattern. Then the Na in each row is disappeared. This data contains the elapsed time (in years) from study baseline to the visit where the biomarker amyloid 42/40 ratio was measured and four different time points.
+
+## P3-3rd part
 

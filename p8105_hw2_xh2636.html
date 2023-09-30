@@ -518,6 +518,86 @@ Gwynnda in July of 2021 is 16300.</p>
 <div id="probelm-3" class="section level2">
 <h2>Probelm 3</h2>
 </div>
+<div id="p3-1st-part" class="section level2">
+<h2>P3-1st part</h2>
+<pre class="r"><code>MCI = read_csv(&quot;./data/MCI_baseline.csv&quot;, skip = 1)%&gt;%
+janitor::clean_names()</code></pre>
+<pre><code>## Rows: 483 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Age at onset
+## dbl (5): ID, Current Age, Sex, Education, apoe4
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>MCI$sex &lt;- ifelse(MCI$sex == 1, &quot;Male&quot;, &quot;Female&quot;)
+MCI$apoe4 &lt;- ifelse(MCI$apoe4 == 1, &quot;Apoe4 carrier&quot;, &quot;Non-Apeo4 carrier&quot;)
+MCI &lt;- MCI[MCI$age_at_onset %in% as.numeric(MCI$age_at_onset), ]</code></pre>
+<pre><code>## Warning in MCI$age_at_onset %in% as.numeric(MCI$age_at_onset): NAs introduced
+## by coercion</code></pre>
+<pre class="r"><code>view(MCI)</code></pre>
+<p>First I chose the path to read the document, and used Janitor to
+modify the name of the document, and I used “skip=1” to skip reading the
+name of the first line, because that is not what we want. The second
+line is the title. After this I used “ifelse” to classify files of type
+0 and 1 and give the corresponding numbers different names. Then I used
+“%in%” to filter out rows that were not data in the age on set. And this
+data includes age, gender, education and whether you are a carrier of
+apoe4. They are 483 participants were recruited and 97 developed
+MCI.</p>
+<pre class="r"><code>x &lt;- mean(MCI$current_age)
+print(x)</code></pre>
+<pre><code>## [1] 65.61134</code></pre>
+<p>The average age for this MCI is 65.611.</p>
+<pre class="r"><code>count_female = MCI %&gt;% group_by(sex) %&gt;% filter(sex==&quot;Female&quot;) %&gt;% summarize(n=n())
+count_female</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   sex        n
+##   &lt;chr&gt;  &lt;int&gt;
+## 1 Female    46</code></pre>
+<p>The number of MCI female is 46.</p>
+<pre class="r"><code>count_apoe4 = MCI %&gt;% group_by(apoe4) %&gt;% filter(apoe4==&quot;Apoe4 carrier&quot;) %&gt;% summarize(n=n())
+count_apoe4</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   apoe4             n
+##   &lt;chr&gt;         &lt;int&gt;
+## 1 Apoe4 carrier    61</code></pre>
+<p>The number of total apoe4 carrier is 61. So the proportion of women
+in the study are APOE4 carriers is 46/61 = 0.7541.</p>
+</div>
+<div id="p3-2nd-part" class="section level2">
+<h2>P3-2nd part</h2>
+<pre class="r"><code>Amyloid = read_csv(&quot;./data/mci_amyloid.csv&quot;, skip = 1)%&gt;%
+  janitor::clean_names()%&gt;%
+  drop_na()</code></pre>
+<pre><code>## Rows: 487 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (5): Baseline, Time 2, Time 4, Time 6, Time 8
+## dbl (1): Study ID
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$baseline), ]
+Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_2), ]
+Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_4), ]
+Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_6), ]
+Amyloid &lt;- Amyloid[!grepl(&quot;Na&quot;, Amyloid$time_8), ]
+view(Amyloid)</code></pre>
+<p>Same as the previous data, I chose the path to read the document, and
+used Janitor to modify the name of the document, and I used “skip=1” to
+skip reading the name of the first line, because that is not what we
+want. The second line is the title. Then I used drop na to delete the
+rows with NA, and Na occurred in this data, so I had to eliminate by
+using !grepl(pattern, x), which is used to filter out elements in the
+character vector x that do not match the specified pattern. Then the Na
+in each row is disappeared. This data contains the elapsed time (in
+years) from study baseline to the visit where the biomarker amyloid
+42/40 ratio was measured and four different time points.</p>
+</div>
+<div id="p3-3rd-part" class="section level2">
+<h2>P3-3rd part</h2>
+</div>
 
 
 
