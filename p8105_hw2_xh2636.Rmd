@@ -140,9 +140,10 @@ MCI = read_csv("./data/MCI_baseline.csv", skip = 1)%>%
 janitor::clean_names()
 MCI$sex <- ifelse(MCI$sex == 1, "Male", "Female")
 MCI$apoe4 <- ifelse(MCI$apoe4 == 1, "Apoe4 carrier", "Non-Apeo4 carrier")
-MCI <- MCI[MCI$age_at_onset %in% as.numeric(MCI$age_at_onset), ]
-## delete the person who have the MCI before testing
-MCI <- MCI[MCI$age_at_onset >= MCI$current_age, ]
+
+
+MCI <- MCI %>%
+  subset(current_age < age_at_onset|age_at_onset ==".")
 view(MCI)
 ```
 
@@ -154,19 +155,19 @@ print(mean_age)
 ```
 
 ```{r, include=FALSE}
-count_total = nrow(MCI)
-count_total
+count_woman = filter(MCI, sex=="Female") %>% summarize(n=n())
+count_woman
 ```
 
 ```{r, include=FALSE}
 count_apoe4 = filter(MCI, sex=="Female",apoe4=="Apoe4 carrier") %>% summarize(n=n())
 count_apoe4
 
-PP <- count_apoe4/count_total
+PP <- count_apoe4/count_woman
 PP
 ```
 
-The average age for this MCI is `r mean_age`. The number of total people is `r count_total`. The number of total female apoe4 carrier is `r count_apoe4`. So the proportion of women in the study are APOE4 carriers is `r PP`.
+The average age for this MCI is `r mean_age`. The number of total people is `r count_woman`. The number of total female apoe4 carrier is `r count_apoe4`. So the proportion of women in the study are APOE4 carriers is `r PP`.
 
 ## P3-2nd part
 ```{r}
@@ -215,9 +216,3 @@ file_path <- "./data/combined_data.csv"
 write.csv(combined_df, file = file_path, row.names = FALSE)
 cat("Combined data has been exported to", file_path, "\n")
 ```
-
-
-
-
-
-
