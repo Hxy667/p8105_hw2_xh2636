@@ -558,6 +558,7 @@ janitor::clean_names()</code></pre>
 <pre class="r"><code>MCI$sex &lt;- ifelse(MCI$sex == 1, &quot;Male&quot;, &quot;Female&quot;)
 MCI$apoe4 &lt;- ifelse(MCI$apoe4 == 1, &quot;Apoe4 carrier&quot;, &quot;Non-Apeo4 carrier&quot;)
 MCI &lt;- MCI[MCI$age_at_onset %in% as.numeric(MCI$age_at_onset), ]
+## delete the person who have the MCI before testing
 MCI &lt;- MCI[MCI$age_at_onset &gt;= MCI$current_age, ]
 view(MCI)</code></pre>
 <p>First I chose the path to read the document, and used Janitor to
