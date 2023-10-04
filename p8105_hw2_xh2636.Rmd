@@ -2,13 +2,14 @@
 title: "p8105_hw2_xh2636"
 author: "Xiaoyu Huang"
 date: "2023-09-28"
-output: html_document
+output: github_document
 ---
 
 ## Problem 1
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(readxl)
 ```
 
 ## P1-1st part
@@ -26,6 +27,8 @@ pols_month_data = read_csv("./data/pols-month.csv")%>%
   relocate(year, month, president)
 view(pols_month_data)
 ```
+For the first data set 'pols_month_data', we have 822 rows and 9 columns. The range for this data set is 1947-2015, which contain important information related to the number of national politicians who are democratic or republican at any given time. The key variable is create a president variable taking values "gop" and "dem".
+
 
 ## P1-2nd part
 ```{r}
@@ -41,6 +44,7 @@ select(-day)%>%
   relocate(year, month)
 view(snpdata)
 ```
+For the second data set "snpdata", we have 787 rows and 2 columns. The range for this data set is 1950-2015, which contain the date of the observation and the closing values of the S&P stock index on the associated date.
 
 ## P1-3rd part
 ```{r}
@@ -64,39 +68,52 @@ merge_data = left_join(pols_month_data, snpdata,
 relocate(year, month, president)
 view(merge_data)
 ```
-
-For the first data set "pols_month_data", we have 822 rows and 9 columns. The range for this data set is 1947-2015, which contain important information related to the number of national politicians who are democratic or republican at any given time. The key variable is create a president variable taking values "gop" and "dem". For the second data set "snpdata", we have 787 rows and 2 columns. The range for this data set is 1950-2015, which contain the date of the observation and the closing values of the S&P stock index on the associated date. For the third data set "unemploydata", we have 68 rows and 13 columns. The range for this data set is 1948-2015, which contain the year of the measurements and percentage of unemployment in the particular month of the associated year. The result is that after organizing these data in various ways, such as arranging them by year and month, etc., we can integrate three different excel data for easy viewing.
+For the third data set "unemploydata", we have 68 rows and 13 columns. The range for this data set is 1948-2015, which contain the year of the measurements and percentage of unemployment in the particular month of the associated year. The result is that after organizing these data in various ways, such as arranging them by year and month, etc., we can integrate three different excel data for easy viewing.
 
 ## Problem 2
 ```{r}
-MrTrashdata = readxl::read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+MrTrashdata = readxl::read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                                  sheet = "Mr. Trash Wheel",
-                                 range = "A2:N549")%>%
+                                 range = "A2:N586")%>%
   janitor::clean_names()%>%
-filter(homes_powered!=0.000)%>%
   drop_na()%>%
   mutate(homes_powered = (weight_tons * 500)/30)
+MrTrashdata$date <- substr(MrTrashdata$date, 
+                           nchar(MrTrashdata$date) - 1, nchar(MrTrashdata$date))
 view(MrTrashdata)
 ```
 
 ```{r}
-ProTrashdata = readxl::read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+ProTrashdata = readxl::read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                                  sheet = "Professor Trash Wheel",
-                                 range = "A2:M96")%>%
+                                 range = "A2:M108")%>%
   janitor::clean_names()%>%
   drop_na()%>%
   mutate(homes_powered = (weight_tons * 500)/30)
+ProTrashdata$date <- substr(ProTrashdata$date, 
+                           nchar(ProTrashdata$date) - 1, nchar(ProTrashdata$date))
 view(ProTrashdata)
+Trash_weight_sum <- sum(ProTrashdata$weight_tons)
 ```
 
 ```{r}
-Gwyndata = readxl::read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+Gwyndata = readxl::read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                                  sheet = "Gwynnda Trash Wheel",
-                                 range = "A2:K108")%>%
+                                 range = "A2:L157")%>%
   janitor::clean_names()%>%
   drop_na()%>%
   mutate(homes_powered = (weight_tons * 500)/30)
+Gwyndata$date <- substr(Gwyndata$date, 
+                           nchar(Gwyndata$date) - 1, nchar(Gwyndata$date))
 view(Gwyndata)
+```
+
+## Find the total cigarette butts
+```{r}
+Gwyndata_abc = readxl::read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
+                                  sheet = "Gwynnda Trash Wheel",
+                                  range = "I2:I7")
+sum_cigarette <- sum(Gwyndata_abc$`Cigarette Butts`)
 ```
 
 ## Binding data
@@ -115,7 +132,7 @@ drop_na(combined)
 view(combined)
 ```
 
-The Mr.Trash Wheel key variables are different kind of bags, glass bottles, plastic bottles, and sport balls. For the Professor trash wheel, the key variable are also the same as before but no sport balls. For the Gwynna trash wheel, the variable are also same but without sports balls, chip bags, grocery bags, and glass bottle. The dumpster number, trash weight, and home powered are important for all the trash wheels. The total weight of trash collected by Professor Trash Wheel is 190.12 tons, and the total number of cigarette butts collected by Gwynnda in July of 2021 is 16300.
+The Mr.Trash Wheel key variables are different kind of bags, 'glass bottles', 'plastic bottles', and sport balls. For the Professor trash wheel, the key variable are also the same as before but no sport balls. For the Gwynna trash wheel, the variable are also same but without sports balls, chip bags, grocery bags, and glass bottle. The dumpster number, trash weight, and home powered are important for all the trash wheels. The total weight of trash collected by Professor Trash Wheel is `r Trash_weight_sum` tons, and the total number of cigarette butts collected by Gwynnda in July of 2021 is `r sum_cigarette`.
 
 ## Probelm 3
 ## P3-1st part
@@ -125,6 +142,7 @@ janitor::clean_names()
 MCI$sex <- ifelse(MCI$sex == 1, "Male", "Female")
 MCI$apoe4 <- ifelse(MCI$apoe4 == 1, "Apoe4 carrier", "Non-Apeo4 carrier")
 MCI <- MCI[MCI$age_at_onset %in% as.numeric(MCI$age_at_onset), ]
+MCI <- MCI[MCI$age_at_onset >= MCI$current_age, ]
 view(MCI)
 ```
 
@@ -134,21 +152,21 @@ First I chose the path to read the document, and used Janitor to modify the name
 x <- mean(MCI$current_age)
 print(x)
 ```
-The average age for this MCI is 65.611.
+The average age for this MCI is 65.55.
 
 ```{r}
 count_female = MCI %>% group_by(sex) %>% filter(sex=="Female") %>% summarize(n=n())
 count_female
 ```
 
-The number of MCI female is 46.
+The number of MCI female is 45.
 
 ```{r}
-count_apoe4 = MCI %>% group_by(apoe4) %>% filter(apoe4=="Apoe4 carrier") %>% summarize(n=n())
+count_apoe4 = MCI %>% group_by(apoe4) %>% filter(sex=="Female",apoe4=="Apoe4 carrier") %>% summarize(n=n())
 count_apoe4
 ```
 
-The number of total apoe4 carrier is 61. So the proportion of women in the study are APOE4 carriers is 46/61 = 0.7541.
+The number of total female apoe4 carrier is 30. So the proportion of women in the study are APOE4 carriers is 30/46 = 0.6522.
 
 ## P3-2nd part
 ```{r}
@@ -197,4 +215,9 @@ file_path <- "./data/combined_data.csv"
 write.csv(combined_df, file = file_path, row.names = FALSE)
 cat("Combined data has been exported to", file_path, "\n")
 ```
+
+
+
+
+
 
