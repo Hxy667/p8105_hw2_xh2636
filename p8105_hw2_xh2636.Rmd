@@ -2,7 +2,7 @@
 title: "p8105_hw2_xh2636"
 author: "Xiaoyu Huang"
 date: "2023-09-28"
-output: html_document
+output: github_document
 ---
 
 ## Problem 1
