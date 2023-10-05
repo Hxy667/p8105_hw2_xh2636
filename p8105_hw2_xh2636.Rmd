@@ -173,16 +173,12 @@ The average age for this MCI is `r mean_age`. The number of total people is `r c
 ```{r}
 Amyloid = read_csv("./data/mci_amyloid.csv", skip = 1)%>%
   janitor::clean_names()%>%
-  drop_na()
-Amyloid <- Amyloid[!grepl("Na", Amyloid$baseline), ]
-Amyloid <- Amyloid[!grepl("Na", Amyloid$time_2), ]
-Amyloid <- Amyloid[!grepl("Na", Amyloid$time_4), ]
-Amyloid <- Amyloid[!grepl("Na", Amyloid$time_6), ]
-Amyloid <- Amyloid[!grepl("Na", Amyloid$time_8), ]
+  pivot_longer(baseline:time_8,
+             names_to = "time",
+             values_to = "time_value") # using pivot long to change the formate of the document.
 colnames(Amyloid)[which(colnames(Amyloid) == "study_id")] <- "id"
-view(Amyloid)
+  view(Amyloid)
 ```
-
 Same as the previous data, I chose the path to read the document, and used Janitor to modify the name of the document, and I used “skip=1” to skip reading the name of the first line, because that is not what we want. The second line is the title. Then I used drop na to delete the rows with NA, and Na occurred in this data, so I had to eliminate by using !grepl(pattern, x), which is used to filter out elements in the character vector x that do not match the specified pattern. Then the Na in each row is disappeared. This data contains the elapsed time (in years) from study baseline to the visit where the biomarker amyloid 42/40 ratio was measured and four different time points.
 
 ## P3-3rd part
