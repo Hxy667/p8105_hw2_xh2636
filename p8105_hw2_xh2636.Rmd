@@ -205,10 +205,14 @@ count_man = combined_df %>% group_by(sex) %>% filter(sex=="Male") %>% summarize(
 count_man
 ```
 
-The combine_df included all the participants appear in both the baseline or Amyloid datasets, and rest of the "id", which is not included are participate whether in baseline and Amyloid. The combine_df age mean is `r current_combine_age`, and the education mean is `r current_education`. Also, the man and female in this data are both 33.
+The combine_df included all the participants (483) appear in both the baseline or Amyloid datasets, and rest of the "id", which is not included are participate whether in baseline and Amyloid. The combine_df age mean is `r current_combine_age`, and the education mean is `r current_education`. Also, the man and female in this data are both 33.
 
 ```{r}
 file_path <- "./data/combined_data.csv"
 write.csv(combined_df, file = file_path, row.names = FALSE)
 cat("Combined data has been exported to", file_path, "\n")
 ```
+
+
+
+
