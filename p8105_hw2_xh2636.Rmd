@@ -147,7 +147,7 @@ MCI <- MCI %>%
 view(MCI)
 ```
 
-First I chose the path to read the document, and used Janitor to modify the name of the document, and I used “skip=1” to skip reading the name of the first line, because that is not what we want. The second line is the title. After this I used “ifelse” to classify files of type 0 and 1 and give the corresponding numbers different names. Then I used “%in%” to filter out rows that were not data in the age on set. And this data includes age, gender, education and whether you are a carrier of apoe4. They are 483 participants were recruited and 97 developed MCI. 
+First I chose the path to read the document, and used Janitor to modify the name of the document, and I used “skip=1” to skip reading the name of the first line, because that is not what we want. The second line is the title. After this I used “ifelse” to classify files of type 0 and 1 and give the corresponding numbers different names. Then I used “%in%” to filter out rows that were not data in the age on set. And this data includes age, gender, education and whether you are a carrier of apoe4. They are 479 participants were recruited and 93 developed MCI. 
 
 ```{r, include=FALSE}
 mean_age <- mean(MCI$current_age)
@@ -188,6 +188,12 @@ combined_df <- inner_join(MCI, Amyloid, by = "id")
 view(combined_df)
 ```
 
+```{r}
+not_joined_ids <- anti_join(MCI, Amyloid, by = "id") # Finding the missing participants
+num_not_joined_ids <- length(not_joined_ids)+2
+view(num_not_joined_ids)
+```
+
 ```{r, include=FALSE}
 current_combine_age <- mean(combined_df$current_age)
 current_education <- mean(combined_df$education)
@@ -205,7 +211,7 @@ count_man = combined_df %>% group_by(sex) %>% filter(sex=="Male") %>% summarize(
 count_man
 ```
 
-The combine_df included all the participants (483) appear in both the baseline or Amyloid datasets, and rest of the "id", which is not included are participate whether in baseline and Amyloid. The combine_df age mean is `r current_combine_age`, and the education mean is `r current_education`. Also, the man and female in this data are both 33.
+The combine_df included some of the participants appear in both the baseline or Amyloid datasets, and rest of the people which are `r num_not_joined_ids` people, which is not included in the final combined dataset, because their "id" only appeared once in the data. The combine_df age mean is `r current_combine_age`, and the education mean is `r current_education`. Also, the man and female in this data are both 33.
 
 ```{r}
 file_path <- "./data/combined_data.csv"
